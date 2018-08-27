@@ -1,0 +1,42 @@
+.gameBody {
+  box-sizing: content-box;
+  border: 5px solid black;
+  display: flex;
+  flex-wrap: wrap;
+  height: 307px;
+  width: 307px;
+}
+
+.gameTile {
+  background-color: blue;
+  border: 5px solid black;
+  box-sizing: border-box;
+  height: 100px;
+  margin: 1px;
+  width: 100px;
+}
+
+.gameTile--hover {
+  background-color: orange;
+}
+
+.gameTile--clicked {
+  background-color: red;
+} 
+
+.gameTile--correct {
+  background-color: purple;
+}
+
+.gameTileNumber {
+  box-sizing: border-box;
+  display: none;
+  height: 100%;
+  margin: 0px;
+  padding: 45%;
+  width: 100%;
+}
+
+.gameTileNumber--display {
+  display: block;
+}
