@@ -1,4 +1,4 @@
-.gameBody {
+#game {
   box-sizing: content-box;
   border: 5px solid black;
   display: flex;
@@ -7,7 +7,7 @@
   width: 307px;
 }
 
-.gameTile {
+.game__tile {
   background-color: blue;
   border: 5px solid black;
   box-sizing: border-box;
@@ -16,27 +16,18 @@
   width: 100px;
 }
 
-.gameTile--hover {
+.game__tile[data-hover='true'] {
   background-color: orange;
 }
 
-.gameTile--clicked {
+.game__tile[data-clicked='true'] {
   background-color: red;
 } 
 
-.gameTile--correct {
+.game__tile[data-complete='true'] {
   background-color: purple;
 }
 
-.gameTileNumber {
-  box-sizing: border-box;
-  display: none;
-  height: 100%;
-  margin: 0px;
-  padding: 45%;
-  width: 100%;
-}
-
-.gameTileNumber--display {
-  display: block;
+#game[data-incorrect='true'] {
+  border-color: red;
 }

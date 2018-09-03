@@ -4,21 +4,20 @@
     <script type="text/javascript" src="memoryMatch.js"></script>
   </head>
   <body>
-    <div class="gameBody"> 
-      <div class="gameTile"><p class="gameTileNumber"></p></div>
-      <div class="gameTile"><p class="gameTileNumber"></p></div>
-      <div class="gameTile"><p class="gameTileNumber"></p></div>
-      <div class="gameTile"><p class="gameTileNumber"></p></div>
-      <div class="gameTile"><p class="gameTileNumber"></p></div>
-      <div class="gameTile"><p class="gameTileNumber"></p></div>
-      <div class="gameTile"><p class="gameTileNumber"></p></div>
-      <div class="gameTile"><p class="gameTileNumber"></p></div>
-      <div class="gameTile"><p class="gameTileNumber"></p></div>
+    <div id="game" data-incorrect=false> 
+      <div class="game__tile" data-complete=false data-clicked=false></div>
+      <div class="game__tile" data-complete=false data-clicked=false></div>
+      <div class="game__tile" data-complete=false data-clicked=false></div>
+      <div class="game__tile" data-complete=false data-clicked=false></div>
+      <div class="game__tile" data-complete=false data-clicked=false></div>
+      <div class="game__tile" data-complete=false data-clicked=false></div>
+      <div class="game__tile" data-complete=false data-clicked=false></div>
+      <div class="game__tile" data-complete=false data-clicked=false></div>
+      <div class="game__tile" data-complete=false data-clicked=false></div>
     </div>
-
-    <button>Restart</button>
+    <button id="game_restart">Restart</button>
     <div>
-      <p>Time Elapsed: <span id="timeElapsed"></span></p>
+      <p>Time Elapsed: <span id="game__timer"></span></p>
     </div>
   </body>
 </html>

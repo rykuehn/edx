@@ -1,11 +1,12 @@
 document.onreadystatechange = () => {
   if(document.readyState === 'complete') {
-    const gameTiles = Array.prototype.slice.call(document.getElementsByClassName('gameTile'));
+    const game__tiles = Array.prototype.slice.call(document.getElementsByClassName('game__tile'));
     let clickedTiles = [];
     let tileNumbers = [1, 1, 2, 2, 3, 3, 4, 4, 5];
     let timeElapsed = 0;
     let gameStart = false;
     let pairs = 0;
+    let interval;
 
     const shuffleArray = (array) => {
       for (let i = array.length - 1; i > 0; i--) {
@@ -14,32 +15,23 @@ document.onreadystatechange = () => {
       };
     };
     
-    const addTimeElapsed = () => {
-      timeElapsed++;
-      const timeElapsedContainer = document.getElementById('timeElapsed');
-      timeElapsedContainer.innerHTML = timeElapsed;
-    }
-
-    const initializeGame = () => {
-      shuffleArray(tileNumbers);
-    }
-
     const gameDuration = (event) => {
-      let start;
       if (gameStart === false) {
-        start = setTimeout(() => { addTimeElapsed() }, 1000);
-      }
-
-      if(event === 'click') {
+        interval = setInterval(() => {
+          timeElapsed++;
+          const timeElapsedContainer = document.getElementById('game__timer');
+          timeElapsedContainer.innerHTML = timeElapsed;
+        }, 1000);
         gameStart = true;
       }
 
       if(event === 'complete') {
-        console.log('here')
         gameStart = false;
-        clearInterval(start);
-        window.alert(`You finished in ${timeElapsed} seconds!`);
-        document.getElementById('timeElapsed').innerHTML = 0;
+        clearInterval(interval);
+        setTimeout(function() {
+          window.alert(`You finished in ${timeElapsed} seconds!`);
+        }, 200);
+        document.getElementById('game__timer').innerHTML = 0;
       }
     }
 
@@ -50,46 +42,59 @@ document.onreadystatechange = () => {
     }
 
     const checkForMatch = (tileOne, tileTwo) => {
-      if (tileOne.firstElementChild.innerHTML === tileTwo.firstElementChild.innerHTML) {
-        tileOne.firstElementChild.classList.add('gameTile--correct');
-        tileTwo.firstElementChild.classList.add('gameTile--correct');
+      if (tileOne.dataset.value === tileTwo.dataset.value) {
+        tileOne.dataset.complete = true;
+        tileTwo.dataset.complete = true;
 
         pairs++;
         isMatchComplete();
       } else {
-        setTimeout(function () {
-          tileOne.classList.remove('gameTile--clicked');
-          tileOne.firstElementChild.classList.remove('gameTileNumber--display');
-
-          tileTwo.classList.remove('gameTile--clicked');
-          tileTwo.firstElementChild.classList.remove('gameTileNumber--display');
-        }, 500)
+        document.getElementById('game').dataset.incorrect = 'true';
+        setTimeout(function() {
+          tileOne.dataset.complete = 'false';
+          tileTwo.dataset.complete = 'false';
+          tileOne.dataset.clicked = 'false';
+          tileTwo.dataset.clicked = 'false';
+          tileOne.innerHTML = '';
+          tileTwo.innerHTML = '';
+          document.getElementById('game').dataset.incorrect = 'false';
+        }, 250);
       }
       clickedTiles = [];
     }
 
-    initializeGame();
+    shuffleArray(tileNumbers);
+    document.getElementById('game_restart').addEventListener('click', function() {
+      location.reload();
+    });
 
-    gameTiles.forEach((tile, i) => {
-      const gameTileNumber = tile.firstElementChild;
-      gameTileNumber.innerHTML = tileNumbers[i];
+    document.addEventListener('keydown', function(event){
+      if(event.key > 0 && event.key < 5 ){
+        game__tiles.forEach(tile => {
+          if(tile.dataset.value === event.key) {
+            tile.click();
+          }
+        })
+      }
+    });
+
+    game__tiles.forEach((tile, i) => {
+      tile.setAttribute('data-value', tileNumbers[i]);
 
       tile.addEventListener('mouseover', () => {
-        tile.classList.add('gameTile--hover');
+        tile.dataset.hover = 'true';
       });
 
       tile.addEventListener('mouseout', () => {
-        if(tile.classList.contains('gameTile--hover')){
-          tile.classList.remove('gameTile--hover');
-        }
+        tile.dataset.hover = 'false'
       });
 
       tile.addEventListener('click', (e) => {
         gameDuration('click');
-        tile.classList.add('gameTile--clicked');
-        gameTileNumber.classList.add('gameTileNumber--display');
+        tile.dataset.clicked = true;
+        tile.innerHTML = tileNumbers[i];
 
-        if(!tile.firstElementChild.classList.contains('gameTile--correct')) {
+        if(tile.dataset.complete === 'false') {
           if(clickedTiles.length === 0) {
             clickedTiles.push(tile);
           } else {
