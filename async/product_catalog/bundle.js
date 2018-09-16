@@ -1,108 +1,7 @@
-var productData = [
-  {
-    "id": "1",
-    "price": "2.34",
-    "type": "clothing"
-  },
-  {
-    "id": "12",
-    "price": "12.34",
-    "type": "clothing"
-  },
-  {
-    "id": "32",
-    "price": "32.24",
-    "type": "clothing"
-  },
-  {
-    "id": "22",
-    "price": "99.22",
-    "type": "clothing"
-  },
-  {
-    "id": "87",
-    "price": "1.11",
-    "type": "electronics"
-  },
-  {
-    "id": "67",
-    "price": "276.6",
-    "type": "electronics"
-  },
-  {
-    "id": "68",
-    "price": "34.56",
-    "type": "electronics"
-  },
-  {
-    "id": "343",
-    "price": "45.43",
-    "type": "electronics"
-  },
-  {
-    "id": "99",
-    "price": "34.34",
-    "type": "food"
-  },
-  {
-    "id": "34",
-    "price": "6.34",
-    "type": "food"
-  },
-  {
-    "id": "2",
-    "price": "2.34",
-    "type": "clothing"
-  },
-  {
-    "id": "3",
-    "price": "12.34",
-    "type": "clothing"
-  },
-  {
-    "id": "4",
-    "price": "32.24",
-    "type": "clothing"
-  },
-  {
-    "id": "5",
-    "price": "99.22",
-    "type": "clothing"
-  },
-  {
-    "id": "6",
-    "price": "1.11",
-    "type": "beauty"
-  },
-  {
-    "id": "7",
-    "price": "276.6",
-    "type": "beauty"
-  },
-  {
-    "id": "8",
-    "price": "34.56",
-    "type": "beauty"
-  },
-  {
-    "id": "9",
-    "price": "45.43",
-    "type": "beauty"
-  },
-  {
-    "id": "10",
-    "price": "34.34",
-    "type": "food"
-  },
-  {
-    "id": "11",
-    "price": "6.34",
-    "type": "food"
-  }
-];
-
 document.onreadystatechange = () => {
-  if (document.readyState === 'interactive') {
+  if (document.readyState === 'complete') {
+    let activeProduct;
+
     const createProductsTable = data => {
       data.forEach(product => {
         const id = document.createElement('th');
@@ -116,6 +15,7 @@ document.onreadystatechange = () => {
         type.innerHTML = product.type;
         price.innerHTML = product.price;
         examineButton.innerHTML = 'Examine';
+        examineButton.addEventListener('click', () => examineProduct(product))
 
         productRow.appendChild(id)
         productRow.appendChild(type)
@@ -123,11 +23,39 @@ document.onreadystatechange = () => {
         productRow.appendChild(examineButton);
 
         table.appendChild(productRow);
-
-        console.log(id);
       });
     }
 
-    createProductsTable(productData);
+    const examineProduct = (product) => {
+      const productIDCategory = document.getElementsByClassName('productID')[0];
+      const priceCategory = document.getElementsByClassName('price')[0];
+      const typeCategory = document.getElementsByClassName('type')[0];
+
+      productIDCategory.innerHTML = product.id;
+      priceCategory.innerHTML = product.price;
+      typeCategory.innerHTML =product.type;
+
+      activeProduct = product;
+      generateSimilarProducts(activeProduct);
+    }
+
+    const init = () => {
+      window.api.getCatalogData().then(result => createProductsTable(result));
+      document.getElementById("inputButton").addEventListener('click', function(){
+        processSearch(document.getElementById('input').value);
+    });
+    }
+
+    const generateSimilarProducts = (activeProduct) => {
+      const category = activeProduct.type;
+      const similarProducts = window.api.getCatalogData().then(result => result.filter(product => product.type=== category));
+    }
+
+    init();
+
+    const processSearch = (id) => { 
+      document.getElementById('input').value = '';
+      window.api.searchProductById(id).then(result => examineProduct(result));
+    }
   }
 }
