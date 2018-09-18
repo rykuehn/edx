@@ -52,14 +52,14 @@
       var promise = new Promise(function(resolve,reject){
         var i = 0;
         setTimeout(function(){
-            while (i < catalog.length){
-                if (catalog[i].id == id){                        
-                    resolve({id:id,price:catalog[i].price,type:catalog[i].type});
-                }
-                i++;
+          while (i < catalog.length){
+            if (catalog[i].id == id){                        
+              resolve({id:id,price:catalog[i].price,type:catalog[i].type});
             }
-            reject("Invalid ID: " + id);
-        },1000);
+            i++;
+          }
+          reject("Invalid ID: " + id);
+        }, 1000);
       });
       return promise;
     }
@@ -89,35 +89,36 @@
       var promise = new Promise(function(resolve,reject){
         var i = 0;
         var data = [];
+        if(!typeOfCategories.includes(type)){
+            reject("Invalid Type: " + type)
+        } else {
           setTimeout(() => {
             while (i < catalog.length) {
               if (catalog[i].type == type){
                 data.push(catalog[i]);
-                i++
               }
+              i++
             }
-            console.log(data)
             resolve(data);
           }, 1000);
-        });
-        return promise;
-      }
+        }
+      });
+      return promise;
     }
 
-  function getIntersection(arrA,arrB,searchedId){
-    var samePrice = arrA;
-    var sameType = arrB;
-    var similarArray = [];
-    samePrice.forEach(function(obj1){
-        sameType.forEach(function(obj2){
-            if(obj1.id == obj2.id && obj1.id != searchedId)
-                similarArray.push(obj1);     
-        });
-    });
-
-    return similarArray;
-
-}
+    function getIntersection(arrA,arrB,searchedId){
+      var samePrice = arrA;
+      var sameType = arrB;
+      var similarArray = [];
+      samePrice.forEach(function(obj1){
+          sameType.forEach(function(obj2){
+              if(obj1.id == obj2.id && obj1.id != searchedId)
+                  similarArray.push(obj1);     
+          });
+      });
+      return similarArray;
+    }
+  }
 
   if(typeof(window.api) === 'undefined'){
     window.api = myLibrary();
