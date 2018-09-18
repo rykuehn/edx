@@ -42,6 +42,7 @@ document.onreadystatechange = () => {
     const init = () => {
       window.api.getCatalogData().then(result => createProductsTable(result));
       document.getElementById("inputButton").addEventListener('click', function(){
+        console.log('clicked')
         processSearch(document.getElementById('input').value);
     });
     }
@@ -55,7 +56,16 @@ document.onreadystatechange = () => {
 
     const processSearch = (id) => { 
       document.getElementById('input').value = '';
-      window.api.searchProductById(id).then(result => examineProduct(result));
+      window.api.searchProductById(id).then( val => {
+        return Promise.all([window.api.searchProductsByPrice(val.price,50),window.api.searchProductsByType(val.type),val]);
+      }).then(function(val){
+        console.log(val)
+          var similarArray = window.api.getIntersection(val[0],val[1],val[2].id);
+          examineProduct(val[2]);
+          createProductsTable(similarArray);
+      }).catch(function(val){
+          alert(val);
+      });  
     }
   }
 }
