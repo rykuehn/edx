@@ -48,13 +48,12 @@
     }
 
     function searchProductById(id) {
-      
       var promise = new Promise(function(resolve,reject){
         var i = 0;
         setTimeout(function(){
-          while (i < catalog.length){
+          while (i < catalog.length) {
             if (catalog[i].id == id){                        
-              resolve({id:id,price:catalog[i].price,type:catalog[i].type});
+              resolve({id: id, price: catalog[i].price, type: catalog[i].type});
             }
             i++;
           }
@@ -75,8 +74,8 @@
             while (i < catalog.length) {
               if (Math.abs(catalog[i].price - price) < difference){
                 priceArray.push(catalog[i]);
-                i++
               }
+              i++
             }
             resolve(priceArray);
           }, 1000);

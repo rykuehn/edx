@@ -2,7 +2,7 @@ document.onreadystatechange = () => {
   if (document.readyState === 'complete') {
     let activeProduct;
 
-    const createProductsTable = data => {
+    const createProductsTable = (data, typeOfTable) => {
       data.forEach(product => {
         const id = document.createElement('th');
         const type = document.createElement('th');
@@ -10,6 +10,7 @@ document.onreadystatechange = () => {
         const productRow = document.createElement('tr');
         const examineButton = document.createElement('button');
         const table = document.getElementsByClassName('allProductsTable')[0];
+        const similarProductsTable = document.getElementsByClassName('similarProdcutsTable')[0];
 
         id.innerHTML = product.id;
         type.innerHTML = product.type;
@@ -22,7 +23,11 @@ document.onreadystatechange = () => {
         productRow.appendChild(price);
         productRow.appendChild(examineButton);
 
-        table.appendChild(productRow);
+        if(typeOfTable === 'similar') {
+          similarProductsTable.appendChild(productRow);
+        } else {
+          table.appendChild(productRow);
+        }
       });
     }
 
@@ -56,13 +61,11 @@ document.onreadystatechange = () => {
     const processSearch = (id) => { 
       document.getElementById('input').value = '';
       window.api.searchProductById(id).then( val => {
-        console.log('first val', val)
         return Promise.all([window.api.searchProductsByPrice(val.price, 50), window.api.searchProductsByType(val.type), val]);
       }).then(result => {
-        console.log('result', result)
           var similarArray = window.api.getIntersection(result[0],result[1],result[2].id);
           examineProduct(result[2]);
-          createProductsTable(similarArray);
+          createProductsTable(similarArray, 'similar');
       }).catch(function(val){
           alert(val);
       });  
